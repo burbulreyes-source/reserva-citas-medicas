@@ -137,7 +137,6 @@
             padding: 20px;
             text-align: center;
             margin-top: 20px;
-            display: none; /* Oculto hasta llenar datos */
         }
 
         .total-price {
@@ -248,7 +247,7 @@
     <div class="step-section" id="final-step" style="display:none;">
         <div class="step-title"><span class="step-number">3</span> Confirmar y Agendar</div>
         
-        <div class="summary-box fade-in">
+        <div class="summary-box fade-in" id="summaryBox" style="display:none;">
             <div>Valor total a pagar:</div>
             <div class="total-price" id="display-price">$0</div>
             
@@ -359,9 +358,9 @@
     instructionsDiv.innerHTML = prepHTML;
 
     finalStepDiv.style.display = 'block';
-    summaryBox.style.display = 'block'; // 👈 ESTA ES LA CLAVE
+document.getElementById('summaryBox').style.display = 'block';
 
-    finalStepDiv.scrollIntoView({ behavior: 'smooth' });
+finalStepDiv.scrollIntoView({ behavior: 'smooth' });
 }
 
     function sendWhatsApp() {
@@ -397,4 +396,5 @@
 </body>
 
 </html>
+
 
