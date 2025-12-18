@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Servicios Médicos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #0056b3; /* Azul Médico Oscuro */
+            --primary-light: #e3f2fd; /* Azul Claro Fondo */
+            --accent: #0288d1; /* Azul Brillante */
+            --white: #ffffff;
+            --gray: #666;
+            --whatsapp: #25D366;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        .header h1 { margin: 0; font-size: 1.5rem; }
+        .header p { margin: 5px 0 0; opacity: 0.9; font-size: 0.9rem; }
+
+        /* Pasos */
+        .step-section {
+            padding: 20px 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* Inputs de Texto */
+        .input-group {
+            display: grid;
+            grid-gap: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--accent); outline: none; }
+
+        /* Tarjetas de Selección (Exámenes) */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        
+        .card {
+            border: 2px solid #eee;
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .card:hover { border-color: var(--accent); }
+        .card.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .card i { font-size: 2rem; color: var(--accent); margin-bottom: 10px; }
+        .card h3 { margin: 0; font-size: 0.95rem; }
+        .card p { font-size: 0.8rem; color: var(--gray); margin-top: 5px; }
+
+        /* Selección de Precio (Radio Buttons bonitos) */
+        .price-options { display: none; margin-top: 15px; }
+        .price-option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .price-option input { width: auto; margin-right: 10px; }
+        
+        /* Caja de Resumen y Precio */
+        .summary-box {
+            background: #eef6fc;
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            display: none; /* Oculto hasta llenar datos */
+        }
+
+        .total-price {
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .prep-instructions {
+            background: white;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            text-align: left;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        .prep-instructions h4 { margin: 0 0 5px; color: #e65100; }
+        .prep-instructions ul { margin: 0; padding-left: 20px; color: #555; }
+
+        /* Botón WhatsApp */
+        .btn-whatsapp {
+            background-color: var(--whatsapp);
+            color: white;
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+        .btn-whatsapp:hover { background-color: #1ebc57; }
+        .note { text-align: center; font-size: 0.8rem; color: #888; margin-top: 10px; }
+
+        /* Animaciones */
+        .fade-in { animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Reserva de Citas Médicas</h1>
+        <p>Agendamiento rápido y seguro</p>
+    </div>
+
+    <div class="step-section">
+        <div class="step-title"><span class="step-number">1</span> Sus Datos Básicos</div>
+        <div class="input-group">
+            <input type="text" id="nombre" placeholder="Nombre Completo del Paciente" required>
+            <input type="number" id="cedula" placeholder="Número de Documento (Cédula)" required>
+            <input type="tel" id="celular" placeholder="Número de Celular" required>
+        </div>
+    </div>
+
+    <div class="step-section">
+        <div class="step-title"><span class="step-number">2</span> Seleccione el Examen</div>
+        
+        <div class="cards-container">
+            <div class="card" onclick="selectService('Holter', this)">
+                <i class="fa-solid fa-heart-pulse"></i>
+                <h3>Holter</h3>
+                <p>Monitoreo cardiaco</p>
+            </div>
+            
+            <div class="card" onclick="selectService('Mapa', this)">
+                <i class="fa-solid fa-stethoscope"></i>
+                <h3>MAPA</h3>
+                <p>Monitoreo de presión</p>
+            </div>
+            
+            <div class="card" onclick="selectService('Electrocardiograma', this)">
+                <i class="fa-solid fa-file-medical-alt"></i>
+                <h3>Electro</h3>
+                <p>Electrocardiograma</p>
+            </div>
+        </div>
+
+        <div id="pricing-options" class="price-options fade-in">
+            <p style="font-weight: 500; margin-bottom: 10px;">¿Qué tipo de orden médica tiene?</p>
+            
+            <label class="price-option">
+                <input type="radio" name="priceType" value="particular" onchange="calculateTotal()">
+                Particular
+            </label>
+            
+            <label class="price-option">
+                <input type="radio" name="priceType" value="protegemos" onchange="calculateTotal()">
+                Entidad Protegemos
+            </label>
+            
+            <label class="price-option">
+                <input type="radio" name="priceType" value="protegemos_bono" onchange="calculateTotal()">
+                Entidad Protegemos (Con Bono)
+            </label>
+        </div>
+    </div>
+
+    <div class="step-section" id="final-step" style="display:none;">
+        <div class="step-title"><span class="step-number">3</span> Confirmar y Agendar</div>
+        
+        <div class="summary-box fade-in">
+            <div>Valor total a pagar:</div>
+            <div class="total-price" id="display-price">$0</div>
+            
+            <div class="prep-instructions" id="instructions">
+                </div>
+
+            <button class="btn-whatsapp" onclick="sendWhatsApp()">
+                <i class="fa-brands fa-whatsapp"></i> Enviar datos y Agendar
+            </button>
+            <p class="note">Se abrirá WhatsApp para que envíe la foto de la orden médica.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configuración de Precios y Reglas
+    const SERVICES_DATA = {
+        'Holter': {
+            prices: { particular: 240000, protegemos: 180000, protegemos_bono: 110000 },
+            prep: [
+                "Traer camisa de botones (ropa holgada).",
+                "Tomar un baño previo (no se podrá bañar en 24h).",
+                "No aplicar cremas en el pecho."
+            ]
+        },
+        'Mapa': {
+            prices: { particular: 240000, protegemos: 180000, protegemos_bono: 110000 },
+            prep: [
+                "Traer camisa de manga corta holgada.",
+                "Estar disponible para regresar en 24 horas a retirar el equipo."
+            ]
+        },
+        'Electrocardiograma': {
+            prices: { particular: 80000 }, // Precio único
+            prep: [
+                "No haber realizado ejercicio físico intenso 1 hora antes.",
+                "No aplicar cremas o lociones en el pecho ni tobillos."
+            ]
+        }
+    };
+
+    let currentService = null;
+    let currentPrice = 0;
+
+    function selectService(serviceName, cardElement) {
+        currentService = serviceName;
+        
+        // 1. Estilos visuales de selección
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+        cardElement.classList.add('selected');
+
+        // 2. Manejo de lógica de precios
+        const priceOptionsDiv = document.getElementById('pricing-options');
+        const finalStepDiv = document.getElementById('final-step');
+        
+        // Reiniciar radio buttons
+        document.querySelectorAll('input[name="priceType"]').forEach(r => r.checked = false);
+
+        if (serviceName === 'Electrocardiograma') {
+            // Electro es caso especial (precio único)
+            priceOptionsDiv.style.display = 'none';
+            currentPrice = SERVICES_DATA['Electrocardiograma'].prices.particular;
+            showSummary();
+        } else {
+            // Holter y Mapa requieren selección de convenio
+            priceOptionsDiv.style.display = 'block';
+            finalStepDiv.style.display = 'none'; // Ocultar resumen hasta que elija convenio
+        }
+    }
+
+    function calculateTotal() {
+        if (!currentService) return;
+
+        const radios = document.getElementsByName('priceType');
+        let selectedType = null;
+        for (let radio of radios) {
+            if (radio.checked) {
+                selectedType = radio.value;
+                break;
+            }
+        }
+
+        if (selectedType && SERVICES_DATA[currentService]) {
+            currentPrice = SERVICES_DATA[currentService].prices[selectedType];
+            showSummary();
+        }
+    }
+
+    function showSummary() {
+        const finalStepDiv = document.getElementById('final-step');
+        const priceDisplay = document.getElementById('display-price');
+        const instructionsDiv = document.getElementById('instructions');
+
+        // Formato moneda COP
+        priceDisplay.innerText = new Intl.NumberFormat('es-CO', { 
+            style: 'currency', 
+            currency: 'COP', 
+            maximumFractionDigits: 0 
+        }).format(currentPrice);
+
+        // Generar lista de instrucciones
+        let prepHTML = '<h4><i class="fa-solid fa-triangle-exclamation"></i> Preparación requerida:</h4><ul>';
+        SERVICES_DATA[currentService].prep.forEach(item => {
+            prepHTML += `<li>${item}</li>`;
+        });
+        prepHTML += '</ul>';
+        instructionsDiv.innerHTML = prepHTML;
+
+        finalStepDiv.style.display = 'block';
+        // Scroll suave hacia el final
+        finalStepDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function sendWhatsApp() {
+        // Validar datos
+        const nombre = document.getElementById('nombre').value;
+        const cedula = document.getElementById('cedula').value;
+        const celular = document.getElementById('celular').value;
+
+        if (!nombre || !cedula || !celular) {
+            alert("Por favor, complete sus datos personales en el Paso 1.");
+            document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+            return;
+        }
+
+        const telefonoMedico = "573017837263";
+        const precioFormateado = document.getElementById('display-price').innerText;
+        
+        // Mensaje Estructurado
+        const texto = `Hola, deseo agendar una cita.%0A%0A` +
+                      `📋 *DATOS DEL PACIENTE*%0A` +
+                      `👤 Nombre: ${nombre}%0A` +
+                      `🆔 Cédula: ${cedula}%0A` +
+                      `📞 Celular: ${celular}%0A%0A` +
+                      `🏥 *SOLICITUD*%0A` +
+                      `Examen: *${currentService}*%0A` +
+                      `Valor a pagar: *${precioFormateado}*%0A%0A` +
+                      `📎 *Adjunto foto de la orden médica para confirmar.*`;
+
+        window.open(`https://wa.me/${telefonoMedico}?text=${texto}`, '_blank');
+    }
+</script>
+
+</body>
+</html>
