@@ -338,29 +338,31 @@
     }
 
     function showSummary() {
-        const finalStepDiv = document.getElementById('final-step');
-        const priceDisplay = document.getElementById('display-price');
-        const instructionsDiv = document.getElementById('instructions');
+    const finalStepDiv = document.getElementById('final-step');
+    const priceDisplay = document.getElementById('display-price');
+    const instructionsDiv = document.getElementById('instructions');
+    const summaryBox = finalStepDiv.querySelector('.summary-box'); // 👈 AÑADIR
 
-        // Formato moneda COP
-        priceDisplay.innerText = new Intl.NumberFormat('es-CO', { 
-            style: 'currency', 
-            currency: 'COP', 
-            maximumFractionDigits: 0 
-        }).format(currentPrice);
+    // Formato moneda COP
+    priceDisplay.innerText = new Intl.NumberFormat('es-CO', { 
+        style: 'currency', 
+        currency: 'COP', 
+        maximumFractionDigits: 0 
+    }).format(currentPrice);
 
-        // Generar lista de instrucciones
-        let prepHTML = '<h4><i class="fa-solid fa-triangle-exclamation"></i> Preparación requerida:</h4><ul>';
-        SERVICES_DATA[currentService].prep.forEach(item => {
-            prepHTML += `<li>${item}</li>`;
-        });
-        prepHTML += '</ul>';
-        instructionsDiv.innerHTML = prepHTML;
+    // Instrucciones
+    let prepHTML = '<h4><i class="fa-solid fa-triangle-exclamation"></i> Preparación requerida:</h4><ul>';
+    SERVICES_DATA[currentService].prep.forEach(item => {
+        prepHTML += `<li>${item}</li>`;
+    });
+    prepHTML += '</ul>';
+    instructionsDiv.innerHTML = prepHTML;
 
-        finalStepDiv.style.display = 'block';
-        // Scroll suave hacia el final
-        finalStepDiv.scrollIntoView({ behavior: 'smooth' });
-    }
+    finalStepDiv.style.display = 'block';
+    summaryBox.style.display = 'block'; // 👈 ESTA ES LA CLAVE
+
+    finalStepDiv.scrollIntoView({ behavior: 'smooth' });
+}
 
     function sendWhatsApp() {
         // Validar datos
@@ -395,3 +397,4 @@
 </body>
 
 </html>
+
